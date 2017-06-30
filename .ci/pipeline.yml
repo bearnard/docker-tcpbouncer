@@ -26,3 +26,4 @@ jobs:
     params:
       build: docker-tcpbouncer
       tag: image-params/tag
+      tag_as_latest: true
