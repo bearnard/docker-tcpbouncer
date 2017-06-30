@@ -1,0 +1,28 @@
+resources:
+- name: docker-tcpbouncer
+  type: git
+  source:
+    uri: https://github.com/jerith/docker-tcpbouncer
+    branch: master
+  webhook_token: prod-my-resource
+  check_every: 30m
+
+- name: tcpbouncer-image
+  type: docker-image
+  source:
+    repository: jerithorg/tcpbouncer
+    username: jerithbot
+    password: {{jerithbot-dockerhub-key}}
+  check_every: 30m
+
+jobs:
+- name: build-image
+  plan:
+  - get: docker-tcpbouncer
+    trigger: true
+  - task: build
+    file: docker-tcpbouncer/.ci/build.yml
+  - put: tcpbouncer-image
+    params:
+      build: docker-tcpbouncer
+      tag: image-params/tag
